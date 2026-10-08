@@ -7,12 +7,12 @@ struct ContentView: View {
     @StateObject private var choreViewModel: ChoreViewModel
 
     init(){
-        let expenseRepo = InMemorySERepository()
+        let expenseRepo = CoreDataExpenseRepository()
 
         let expenseUseCase = RecordUseCases(
             repository: expenseRepo
         )
-        let choreRepo = InMemoryChoreRepo()
+        let choreRepo = CoreDataChoreRepository()
 
         let assignChoreUseCase = AHCUseCase(
             repository: choreRepo
