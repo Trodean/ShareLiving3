@@ -42,7 +42,7 @@ struct MainTabView: View {
                 openHousemates: {
                     selectedTab = 3
                     showHomePage = false
-                }
+                },
             )
         } else {
             TabView(selection: $selectedTab) {
@@ -110,6 +110,9 @@ struct MainTabView: View {
     let completeUseCase = CompleteChoreUseCase(
         repository: choreRepo
     )
+    let dueChoresUseCase = DueChoresUseCase(
+        repository: choreRepo
+    )
 
     MainTabView(
         expenseViewModel: EViewModel(
@@ -117,7 +120,8 @@ struct MainTabView: View {
         ),
         choreViewModel: ChoreViewModel(
             assignUseCase: assignUseCase,
-            completeUseCase: completeUseCase
+            completeUseCase: completeUseCase,
+            dueChoresUseCase: dueChoresUseCase
         )
     )
 }

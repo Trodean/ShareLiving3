@@ -1,6 +1,6 @@
 //
 //  ChoresView.swift
-//  SharedLiving2
+//  SharedLiving3
 //
 //  Created by Yang Peng on 16/9/2026.
 //
@@ -9,26 +9,24 @@
 
 import SwiftUI
 
-struct ChoresView: View {
+struct ChoresView: View{
 
     let onHome: () -> Void
     let housemates: [Housemate]
 
     @ObservedObject var choreViewModel: ChoreViewModel
-
     @State private var selectedFilter = 0
     @State private var showAddChore = false
 
     private var choresInSevenDays: [Chore] {
         let calendar = Calendar.current
         let today = calendar.startOfDay(for: Date())
-
         let sevenDaysLater = calendar.date(
             byAdding: .day,
             value: 7,
             to: today
         ) ?? today
-
+        
         return choreViewModel.chores
             .filter {
                 $0.dueDate >= today &&
@@ -37,6 +35,22 @@ struct ChoresView: View {
             .sorted {
                 $0.dueDate < $1.dueDate
             }
+    }
+
+    //new: overdue chores come from DueChoresUseCase
+    private var overdueChores: [Chore] {
+        let today = Calendar.current.startOfDay(for: Date())
+
+        return choreViewModel.dueChores.filter {
+            $0.dueDate < today
+        }
+    }
+
+    //new: unfinished chores due today
+    private var dueTodayChores: [Chore] {
+        choreViewModel.dueChores.filter {
+            Calendar.current.isDateInToday($0.dueDate)
+        }
     }
 
     private var todayChores: [Chore] {
@@ -62,7 +76,10 @@ struct ChoresView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 22) {
 
-                    Picker("Chore Filter", selection: $selectedFilter) {
+                    Picker(
+                        "Chore Filter",
+                        selection: $selectedFilter
+                    ) {
                         Text("In 7 Days").tag(0)
                         Text("All Chores").tag(1)
                     }
@@ -132,6 +149,26 @@ struct ChoresView: View {
     private var sevenDayView: some View {
         VStack(alignment: .leading, spacing: 22) {
 
+            dueChoresSummary
+
+            if !overdueChores.isEmpty {
+                VStack(alignment: .leading, spacing: 12) {
+                    HStack {
+                        Text("Overdue")
+                            .font(.title2)
+                            .fontWeight(.semibold)
+
+                        Spacer()
+
+                        Text("DUE")
+                            .font(.caption)
+                            .fontWeight(.semibold)
+                    }
+
+                    choreList(overdueChores)
+                }
+            }
+
             VStack(alignment: .leading, spacing: 12) {
                 Text("Today")
                     .font(.title2)
@@ -164,6 +201,61 @@ struct ChoresView: View {
                 }
             }
         }
+    }
+
+    // A3: Due Chores summary
+    private var dueChoresSummary: some View {
+        HStack(spacing: 14) {
+
+            Image(
+                systemName: choreViewModel.dueChores.isEmpty
+                    ? "checkmark.circle.fill"
+                    : "exclamationmark.circle.fill"
+            )
+            .font(.title2)
+            .foregroundStyle(Color("SharedGreen"))
+
+            VStack(alignment: .leading, spacing: 4) {
+                Text("Due Chores")
+                    .font(.headline)
+
+                Text(dueChoresSummaryText)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            }
+
+            Spacer()
+        }
+        .padding()
+        .frame(maxWidth: .infinity)
+        .background(
+            RoundedRectangle(cornerRadius: 16)
+                .fill(Color("SharedOrange"))
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 16)
+                .stroke(lineWidth: 1)
+        )
+    }
+
+    private var dueChoresSummaryText: String {
+
+        let overdueCount = overdueChores.count
+        let todayCount = dueTodayChores.count
+
+        if overdueCount == 0 && todayCount == 0 {
+            return "You're all caught up."
+        }
+
+        if overdueCount == 0 {
+            return "\(todayCount) due today"
+        }
+
+        if todayCount == 0 {
+            return "\(overdueCount) overdue"
+        }
+
+        return "\(overdueCount) overdue · \(todayCount) due today"
     }
 
     private var allChoresView: some View {
@@ -207,7 +299,6 @@ struct ChoresView: View {
                 .stroke(lineWidth: 1)
         )
     }
-
     private func emptyMessage(_ message: String) -> some View {
         Text(message)
             .foregroundStyle(.secondary)
@@ -228,7 +319,8 @@ struct ChoresView: View {
             return "TODAY"
         }
 
-        if chore.dueDate < Calendar.current.startOfDay(for: Date()) {
+        if chore.dueDate <
+            Calendar.current.startOfDay(for: Date()) {
             return "OVERDUE"
         }
 
@@ -242,7 +334,6 @@ struct ChoresView: View {
 }
 
 struct ChoreRowView: View {
-
     let title: String
     let assignee: String
     let status: String
@@ -268,7 +359,6 @@ struct ChoreRowView: View {
             VStack(alignment: .leading, spacing: 5) {
                 Text(title)
                     .font(.headline)
-
                 Text(assignee)
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
@@ -285,30 +375,40 @@ struct ChoreRowView: View {
     }
 }
 
-#Preview {
-    let repo = InMemoryChoreRepo()
+
+
+
+#Preview{
+    let choreRepo = InMemoryChoreRepo()
 
     let assignUseCase = AHCUseCase(
-        repository: repo
+        repository: choreRepo
     )
 
     let completeUseCase = CompleteChoreUseCase(
-        repository: repo
+        repository: choreRepo
     )
-
+    let dueChoresUseCase = DueChoresUseCase(
+        repository: choreRepo
+    )
+    let choreViewModel = ChoreViewModel(
+        assignUseCase: assignUseCase,
+        completeUseCase: completeUseCase,
+        dueChoresUseCase: dueChoresUseCase
+    )
+    let housemates = [
+        Housemate(
+            id: UUID(),
+            name: "Yang"
+        ),
+        Housemate(
+            id: UUID(),
+            name: "Alex"
+        )
+    ]
     ChoresView(
         onHome: {},
-        housemates: [
-            Housemate(id: UUID(), name: "Yang"),
-            Housemate(id: UUID(), name: "Jason"),
-            Housemate(id: UUID(), name: "Alex"),
-            Housemate(id: UUID(), name: "Emma"),
-            Housemate(id: UUID(), name: "Sam"),
-            Housemate(id: UUID(), name: "Luna")
-        ],
-        choreViewModel: ChoreViewModel(
-            assignUseCase: assignUseCase,
-            completeUseCase: completeUseCase
-        )
+        housemates: housemates,
+        choreViewModel: choreViewModel
     )
 }

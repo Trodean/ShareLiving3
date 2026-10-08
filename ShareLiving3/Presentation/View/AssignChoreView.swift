@@ -1,6 +1,6 @@
 //
 //  AssignChoreView.swift
-//  SharedLiving2
+//  SharedLiving3
 //
 //  Created by Yang Peng on 16/9/2026.
 //
@@ -41,7 +41,6 @@ struct AssignChoreView: View {
                     }
                 }
             }
-
             Section {
                 Button("Assign Chore") {
                     saveChore()
@@ -83,7 +82,6 @@ struct AssignChoreView: View {
             choreViewModel.errorMsg = "Please select a housemate."
             return
         }
-
         let chore = Chore(
             id: UUID(),
             title: title,
@@ -94,31 +92,40 @@ struct AssignChoreView: View {
 
         let success = choreViewModel.assignChore(chore)
 
-        if success {
+        if success{
             dismiss()
         }
     }
 }
-
 #Preview {
-    let repo = InMemoryChoreRepo()
+    let choreRepo = InMemoryChoreRepo()
 
     let assignUseCase = AHCUseCase(
-        repository: repo
+        repository: choreRepo
     )
-
     let completeUseCase = CompleteChoreUseCase(
-        repository: repo
+        repository: choreRepo
     )
-
-    AssignChoreView(
-        housemates: [
-            Housemate(id: UUID(), name: "Yang"),
-            Housemate(id: UUID(), name: "Jason")
-        ],
-        choreViewModel: ChoreViewModel(
-            assignUseCase: assignUseCase,
-            completeUseCase: completeUseCase
+    let dueChoresUseCase = DueChoresUseCase(
+        repository: choreRepo
+    )
+    let choreViewModel = ChoreViewModel(
+        assignUseCase: assignUseCase,
+        completeUseCase: completeUseCase,
+        dueChoresUseCase: dueChoresUseCase
+    )
+    let housemates = [
+        Housemate(
+            id: UUID(),
+            name: "Yang"
+        ),
+        Housemate(
+            id: UUID(),
+            name: "Alex"
         )
+    ]
+    AssignChoreView(
+        housemates: housemates,
+        choreViewModel: choreViewModel
     )
 }

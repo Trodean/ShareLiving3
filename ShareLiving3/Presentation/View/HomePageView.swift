@@ -119,11 +119,11 @@ struct HomeMenuCard: View {
             .background(
                 RoundedRectangle(cornerRadius: 20)
                     .fill(Color("SharedOrange"))
-                )
-            .overlay(RoundedRectangle(cornerRadius: 20)
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: 20)
                     .stroke(lineWidth: 1)
             )
-            
         }
         .buttonStyle(.plain)
     }

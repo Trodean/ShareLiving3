@@ -20,6 +20,9 @@ struct ContentView: View {
         let completeChoreUseCase = CompleteChoreUseCase(
             repository: choreRepo
         )
+        let dueChoresUseCase = DueChoresUseCase(
+            repository: choreRepo
+        )
 
         _expenseViewModel = StateObject(
             wrappedValue: EViewModel(
@@ -29,7 +32,8 @@ struct ContentView: View {
         _choreViewModel = StateObject(
             wrappedValue: ChoreViewModel(
                 assignUseCase: assignChoreUseCase,
-                completeUseCase: completeChoreUseCase
+                completeUseCase: completeChoreUseCase,
+                dueChoresUseCase: dueChoresUseCase
             )
         )
     }

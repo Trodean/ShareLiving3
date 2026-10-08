@@ -90,6 +90,34 @@ final class CoreDataChoreRepository: ChoreRepo {
             return []
         }
     }
+    func getIncompleteChores(dueBy date: Date) -> [Chore] {
+        let request = ChoreEntity.fetchRequest ()
+
+        request.predicate = NSPredicate(
+            format: "isCompleted == NO AND dueDate <= %@",
+            date as NSDate
+        )
+        request.sortDescriptors = [
+            NSSortDescriptor(
+                key: "dueDate",
+                ascending: true
+            )
+        ]
+        do{
+            let entities = try context.fetch(request)
+
+            return entities.compactMap {
+                mapToDomain($0)
+            }
+
+        } catch {
+            print(
+                "Failed to fetch incomplete chores: \(error.localizedDescription)"
+            )
+
+            return []
+        }
+    }
 
 
     private func fetchOrCreateHousemate(
