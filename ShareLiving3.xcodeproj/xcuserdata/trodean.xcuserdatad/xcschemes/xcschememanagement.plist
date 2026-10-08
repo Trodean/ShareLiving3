@@ -9,10 +9,33 @@
 			<key>orderHint</key>
 			<integer>0</integer>
 		</dict>
+		<key>SL3WidgetExtension.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>1</integer>
+		</dict>
 		<key>ShareLiving3.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>0</integer>
+		</dict>
+	</dict>
+	<key>SuppressBuildableAutocreation</key>
+	<dict>
+		<key>000000000000000100000000</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>8BA1A2DB30784A4700543697</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>8BA1A30230784C1700543697</key>
+		<dict>
+			<key>primary</key>
+			<true/>
 		</dict>
 	</dict>
 </dict>
