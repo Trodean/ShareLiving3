@@ -23,10 +23,13 @@ struct ContentView: View {
         let dueChoresUseCase = DueChoresUseCase(
             repository: choreRepo
         )
-
+        let settlementPlanUseCase = SettlementPlanUseCase(
+            repository: expenseRepo
+        )
         _expenseViewModel = StateObject(
             wrappedValue: EViewModel(
-                recordUseCase: expenseUseCase
+                recordUseCase: expenseUseCase,
+                settlementPlanUseCase: settlementPlanUseCase
             )
         )
         _choreViewModel = StateObject(

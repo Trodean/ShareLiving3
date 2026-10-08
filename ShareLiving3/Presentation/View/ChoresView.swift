@@ -17,6 +17,7 @@ struct ChoresView: View{
     @ObservedObject var choreViewModel: ChoreViewModel
     @State private var selectedFilter = 0
     @State private var showAddChore = false
+    @State private var showError = false
 
     private var choresInSevenDays: [Chore] {
         let calendar = Calendar.current
@@ -127,16 +128,7 @@ struct ChoresView: View{
         }
         .alert(
             "Unable to Complete Chore",
-            isPresented: Binding(
-                get: {
-                    choreViewModel.errorMsg != nil
-                },
-                set: { isPresented in
-                    if !isPresented {
-                        choreViewModel.errorMsg = nil
-                    }
-                }
-            )
+            isPresented: $showError
         ) {
             Button("OK", role: .cancel) {
                 choreViewModel.errorMsg = nil

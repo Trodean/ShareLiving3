@@ -96,27 +96,29 @@ struct MainTabView: View {
 }
 
 #Preview {
+
     let expenseRepo = InMemorySERepository()
     let expenseUseCase = RecordUseCases(
         repository: expenseRepo
     )
+    let settlementPlanUseCase = SettlementPlanUseCase(
+        repository: expenseRepo
+    )
 
     let choreRepo = InMemoryChoreRepo()
-
     let assignUseCase = AHCUseCase(
         repository: choreRepo
     )
-
     let completeUseCase = CompleteChoreUseCase(
         repository: choreRepo
     )
     let dueChoresUseCase = DueChoresUseCase(
         repository: choreRepo
     )
-
     MainTabView(
         expenseViewModel: EViewModel(
-            recordUseCase: expenseUseCase
+            recordUseCase: expenseUseCase,
+            settlementPlanUseCase: settlementPlanUseCase
         ),
         choreViewModel: ChoreViewModel(
             assignUseCase: assignUseCase,

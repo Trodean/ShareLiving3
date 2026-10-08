@@ -20,6 +20,7 @@ struct AssignChoreView: View {
     @State private var title = ""
     @State private var selectedAssigneeID: UUID?
     @State private var dueDate = Date()
+    @State private var showError = false
 
     var body: some View {
         Form {
@@ -49,16 +50,7 @@ struct AssignChoreView: View {
         }
         .alert(
             "Unable to Assign Chore",
-            isPresented: Binding(
-                get: {
-                    choreViewModel.errorMsg != nil
-                },
-                set: { isPresented in
-                    if !isPresented {
-                        choreViewModel.errorMsg = nil
-                    }
-                }
-            )
+            isPresented: $showError
         ) {
             Button("OK", role: .cancel) {
                 choreViewModel.errorMsg = nil

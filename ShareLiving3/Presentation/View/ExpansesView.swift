@@ -6,30 +6,23 @@
 //
 // Displays shared household expenses and a summary of the total amount recorded, and it also provides access to the Add Expense screen through Add Button.
 
-
 import SwiftUI
 
-
-
-struct ExpensesView: View {
-
+struct ExpensesView: View{
     let onHome: () -> Void
     @ObservedObject var expenseViewModel: EViewModel
 
     let housemates: [Housemate]
 
     @State private var showAddExpense = false
-
     private var totalSpent: Double {
         expenseViewModel.expenses.reduce(0) {
             $0 + $1.amount
         }
     }
-
     private var monthName: String {
         Date.now.formatted(.dateTime.month(.wide))
     }
-
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -37,7 +30,9 @@ struct ExpensesView: View {
 
                     summaryCard
 
-                    VStack(alignment: .leading, spacing: 12) {
+                    repaymentPlanSection
+
+                    VStack(alignment: .leading, spacing: 12){
                         Text("Recent Expenses")
                             .font(.title2)
                             .fontWeight(.semibold)
@@ -61,7 +56,7 @@ struct ExpensesView: View {
                     }
                 }
 
-                ToolbarItem(placement: .topBarTrailing) {
+                ToolbarItem(placement: .topBarTrailing){
                     Button {
                         showAddExpense = true
                     } label: {
@@ -70,7 +65,7 @@ struct ExpensesView: View {
                 }
             }
         }
-        .sheet(isPresented: $showAddExpense) {
+        .sheet(isPresented: $showAddExpense){
             NavigationStack {
                 AddExpenseView(
                     expenseViewModel: expenseViewModel,
@@ -80,19 +75,17 @@ struct ExpensesView: View {
         }
     }
 
-    private var summaryCard: some View {
+    private var summaryCard: some View{
         VStack(alignment: .leading, spacing: 10) {
 
             Text("\(monthName) Shared Expenses")
                 .font(.headline)
-
             Text("Total Spent")
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
 
             Text("$\(totalSpent, specifier: "%.2f")")
                 .font(.system(size: 38, weight: .semibold))
-
             ProgressView(value: 0.65)
                 .padding(.vertical, 4)
 
@@ -106,6 +99,128 @@ struct ExpensesView: View {
                 .stroke(lineWidth: 1)
         )
     }
+
+    //NEw: Repayment Plan
+
+    private var repaymentPlanSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+
+            HStack {
+                Text("Repayment Plan")
+                    .font(.title2)
+                    .fontWeight(.semibold)
+
+                Spacer()
+
+                if !expenseViewModel.settlementPlan.isEmpty {
+                    Text(transferCountText)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+            }
+
+            if expenseViewModel.settlementPlan.isEmpty {
+
+                HStack(spacing: 12) {
+
+                    Image(systemName: "checkmark.circle.fill")
+                        .font(.title2)
+                        .foregroundStyle(Color("SharedGreen"))
+
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Everyone is settled")
+                            .font(.headline)
+
+                        Text("No repayments are currently needed.")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                    }
+
+                    Spacer()
+                }
+                .padding()
+                .background(
+                    RoundedRectangle(cornerRadius: 16)
+                        .stroke(lineWidth: 1)
+                )
+
+            } else {
+
+                VStack(spacing: 0) {
+
+                    ForEach(
+                        Array(
+                            expenseViewModel
+                                .settlementPlan
+                                .enumerated()
+                        ),
+                        id: \.element.id
+                    ) { index, transfer in
+
+                        repaymentRow(transfer)
+
+                        if index <
+                            expenseViewModel.settlementPlan.count - 1 {
+                            Divider()
+                        }
+                    }
+                }
+                .background(
+                    RoundedRectangle(cornerRadius: 16)
+                        .stroke(lineWidth: 1)
+                )
+            }
+        }
+    }
+
+    private func repaymentRow(
+        _ transfer: SettlementTransfer
+    ) -> some View {
+
+        HStack(spacing: 14) {
+
+            Image(systemName: "arrow.right.circle.fill")
+                .font(.title2)
+                .foregroundStyle(Color("SharedGreen"))
+
+            VStack(alignment: .leading, spacing: 5) {
+
+                HStack(spacing: 6) {
+                    Text(transfer.from.name)
+                        .fontWeight(.semibold)
+
+                    Image(systemName: "arrow.right")
+                        .font(.caption)
+
+                    Text(transfer.to.name)
+                        .fontWeight(.semibold)
+                }
+
+                Text("Suggested repayment")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+
+            Spacer()
+
+            Text("$\(transfer.amount, specifier: "%.2f")")
+                .font(.headline)
+        }
+        .padding()
+        .frame(minHeight: 72)
+    }
+
+    private var transferCountText: String {
+        let count = expenseViewModel.settlementPlan.count
+
+        if count == 1 {
+            return "1 transfer"
+        }
+
+        return "\(count) transfers"
+    }
+
+    //New: Recent Expenses
 
     private var recentExpenses: some View {
         VStack(spacing: 0) {
@@ -122,7 +237,8 @@ struct ExpensesView: View {
 
                     ExpenseRowView(expense: expense)
 
-                    if expense.id != expenseViewModel.expenses.first?.id {
+                    if expense.id !=
+                        expenseViewModel.expenses.first?.id {
                         Divider()
                     }
                 }
@@ -191,14 +307,30 @@ struct ExpenseRowView: View {
 
 #Preview {
     let repository = InMemorySERepository()
-    let useCase = RecordUseCases(repository: repository)
+
+    let recordUseCase = RecordUseCases(
+        repository: repository
+    )
+
+    let settlementPlanUseCase = SettlementPlanUseCase(
+        repository: repository
+    )
 
     ExpensesView(
         onHome: {},
-        expenseViewModel: EViewModel(recordUseCase: useCase),
+        expenseViewModel: EViewModel(
+            recordUseCase: recordUseCase,
+            settlementPlanUseCase: settlementPlanUseCase
+        ),
         housemates: [
-            Housemate(id: UUID(), name: "Phoebe"),
-            Housemate(id: UUID(), name: "Jason")
+            Housemate(
+                id: UUID(),
+                name: "Phoebe"
+            ),
+            Housemate(
+                id: UUID(),
+                name: "Jason"
+            )
         ]
     )
 }
