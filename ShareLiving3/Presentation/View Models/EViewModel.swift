@@ -15,18 +15,27 @@ final class EViewModel: ObservableObject {
     @Published var expenses: [SharedExpenses] = []
     @Published var settlementPlan: [SettlementTransfer] = []
     @Published var errorMsg: String?
+    @Published var isCurrentMonthSettled = false
 
     private let recordUseCase: RecordUseCases
     private let settlementPlanUseCase: SettlementPlanUseCase
+    private let settleMonthUseCase: SettleMonthUseCase
 
     init(
         recordUseCase: RecordUseCases,
-        settlementPlanUseCase: SettlementPlanUseCase
+        settlementPlanUseCase: SettlementPlanUseCase,
+        settleMonthUseCase: SettleMonthUseCase
     ) {
         self.recordUseCase = recordUseCase
         self.settlementPlanUseCase = settlementPlanUseCase
+        self.settleMonthUseCase = settleMonthUseCase
+
         self.expenses = recordUseCase.getAllExpenses()
+        
+        settleMonthUseCase.settlePastMonths()
+
         refreshSettlementPlan()
+        refreshSettlementStatus()
     }
 
     @discardableResult
@@ -39,8 +48,24 @@ final class EViewModel: ObservableObject {
             errorMsg = nil
             return true
 
+        } catch RecordSEError.invalid_amount {
+            errorMsg = "Enter an expense amount greater than $0."
+            return false
+
+        } catch RecordSEError.no_expense_shares {
+            errorMsg = "Select at least one housemate to share this expense."
+            return false
+
+        } catch RecordSEError.invalid_share_portions {
+            errorMsg = "Each selected housemate must have at least one portion."
+            return false
+
+        } catch RecordSEError.monthAlreadySettled {
+            errorMsg = "This month has already been finalised. Add the expense to the current month instead."
+            return false
+
         } catch {
-            errorMsg = String(describing: error)
+            errorMsg = "The expense could not be added. Please check the details and try again."
             return false
         }
     }
@@ -66,6 +91,42 @@ final class EViewModel: ObservableObject {
             settlementPlan = []
             errorMsg =
                 "The repayment plan could not be calculated. Please check the expense details and try again."
+        }
+    }
+    
+    func refreshSettlementStatus() {
+        isCurrentMonthSettled =
+            settleMonthUseCase.isSettled()
+    }
+    
+    @discardableResult
+    func settleCurrentMonth() -> Bool {
+        do {
+            try settleMonthUseCase.execute()
+
+            refreshSettlementPlan()
+            refreshSettlementStatus()
+
+            errorMsg = nil
+            return true
+
+        } catch SettleMonthError.alreadySettled {
+            errorMsg =
+                "This month has already been settled."
+
+            return false
+
+        } catch SettleMonthError.noExpenses {
+            errorMsg =
+                "There are no expenses to settle this month."
+
+            return false
+
+        } catch {
+            errorMsg =
+                "This month could not be settled. Please try again."
+
+            return false
         }
     }
 }

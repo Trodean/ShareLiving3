@@ -15,14 +15,33 @@ enum SettlementPlanError: Error{
 struct SettlementPlanUseCase {
 
     private let repository: SERepository
+    private let calendar = Calendar.current
 
     init(repository: SERepository){
         self.repository = repository
     }
 
-    func execute() throws -> [SettlementTransfer] {
+    func execute(
+        for date: Date = Date()
+    ) throws -> [SettlementTransfer] {
 
-        let expenses = repository.getAllexpenses()
+        let monthKey = makeMonthKey(for: date)
+
+        if repository.isMonthSettled(
+            monthKey: monthKey
+        ) {
+            return []
+        }
+
+        let expenses = repository
+            .getAllexpenses()
+            .filter {
+                calendar.isDate(
+                    $0.date,
+                    equalTo: date,
+                    toGranularity: .month
+                )
+            }
 
         var balances: [UUID: Int] = [:]
         var housemates: [UUID: Housemate] = [:]
@@ -83,7 +102,27 @@ struct SettlementPlanUseCase {
         }
         return findMinimumPlan(netBalances) ?? []
     }
+    
+    //New: Monthly check
+    private func makeMonthKey(
+        for date: Date
+    ) -> String {
 
+        let components = calendar.dateComponents(
+            [.year, .month],
+            from: date
+        )
+
+        let year = components.year ?? 0
+        let month = components.month ?? 0
+
+        return String(
+            format: "%04d-%02d",
+            year,
+            month
+        )
+    }
+    
     private func splitExpense(
         totalCents: Int,
         shares: [Shares]

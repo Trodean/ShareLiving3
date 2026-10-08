@@ -8,7 +8,21 @@
 import Foundation
 
 // Defines the data operations for shared expenses.
+
+enum MonthlySettlementRepositoryError: Error {
+    case alreadySettled
+}
+
 protocol SERepository {
     func addExpenses(_ expense: SharedExpenses)
     func getAllexpenses() -> [SharedExpenses]
+    
+    func isMonthSettled(
+        monthKey: String
+    ) -> Bool
+
+    func settleMonth(
+        monthKey: String,
+        settledDate: Date
+    ) throws
 }

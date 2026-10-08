@@ -74,6 +74,31 @@ struct ExpensesView: View{
             }
         }
     }
+    
+    private var currentUser: Housemate?{
+        housemates.first
+    }
+
+    private var currentUserBalance: Double {
+        guard let currentUser else {
+            return 0
+        }
+
+        var balance = 0.0
+
+        for transfer in expenseViewModel.settlementPlan {
+
+            if transfer.from.id == currentUser.id {
+                balance -= transfer.amount
+            }
+
+            if transfer.to.id == currentUser.id {
+                balance += transfer.amount
+            }
+        }
+
+        return balance
+    }
 
     private var summaryCard: some View{
         VStack(alignment: .leading, spacing: 10) {
@@ -89,8 +114,14 @@ struct ExpensesView: View{
             ProgressView(value: 0.65)
                 .padding(.vertical, 4)
 
-            Text("You owe —")
-                .font(.headline)
+            VStack(alignment: .leading, spacing: 4) {
+                Text(balanceTitle)
+                    .font(.headline)
+
+                Text("$\(balanceAmount, specifier: "%.2f")")
+                    .font(.title3)
+                    .fontWeight(.semibold)
+            }
         }
         .padding(18)
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -98,6 +129,22 @@ struct ExpensesView: View{
             RoundedRectangle(cornerRadius: 16)
                 .stroke(lineWidth: 1)
         )
+    }
+    
+    private var balanceTitle: String {
+        if currentUserBalance < 0 {
+            return "You owe"
+        }
+
+        if currentUserBalance > 0 {
+            return "You are owed"
+        }
+
+        return "You're settled"
+    }
+
+    private var balanceAmount: Double {
+        abs(currentUserBalance)
     }
 
     //NEw: Repayment Plan
@@ -315,12 +362,16 @@ struct ExpenseRowView: View {
     let settlementPlanUseCase = SettlementPlanUseCase(
         repository: repository
     )
+    let settleMonthUseCase = SettleMonthUseCase(
+        repository: repository
+    )
 
     ExpensesView(
         onHome: {},
         expenseViewModel: EViewModel(
             recordUseCase: recordUseCase,
-            settlementPlanUseCase: settlementPlanUseCase
+            settlementPlanUseCase: settlementPlanUseCase,
+            settleMonthUseCase: settleMonthUseCase
         ),
         housemates: [
             Housemate(

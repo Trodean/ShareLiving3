@@ -21,6 +21,7 @@ struct AddExpenseView: View {
     @State private var selectedPayerID: UUID?
     @State private var portions: [UUID: Int] = [:]
     @State private var selectedCategory: ExpenseCategory = .groceries
+    @State private var showError = false
     
     var body: some View {
         Form {
@@ -78,16 +79,7 @@ struct AddExpenseView: View {
         }
         .alert(
             "Unable to Add Expense",
-            isPresented: Binding(
-                get: {
-                    expenseViewModel.errorMsg != nil
-                },
-                set: { isPresented in
-                    if !isPresented {
-                        expenseViewModel.errorMsg = nil
-                    }
-                }
-            )
+            isPresented: $showError
         ) {
             Button("OK", role: .cancel) {
                 expenseViewModel.errorMsg = nil
@@ -150,6 +142,8 @@ struct AddExpenseView: View {
 
         if success {
             dismiss()
+        } else {
+            showError = true
         }
     }
 }

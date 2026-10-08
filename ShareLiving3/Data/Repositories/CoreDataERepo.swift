@@ -79,6 +79,53 @@ final class CoreDataExpenseRepository: SERepository {
             return []
         }
     }
+    
+    func isMonthSettled(
+        monthKey: String
+    ) -> Bool {
+
+        let request = MonthlySettlementEntity.fetchRequest()
+
+        request.predicate = NSPredicate(
+            format: "monthKey == %@",
+            monthKey
+        )
+
+        request.fetchLimit = 1
+
+        do {
+            let result = try context.fetch(request)
+
+            return !result.isEmpty
+
+        } catch {
+            print(
+                "Failed to check monthly settlement: \(error.localizedDescription)"
+            )
+
+            return false
+        }
+    }
+
+
+    func settleMonth(
+        monthKey: String,
+        settledDate: Date
+    ) throws {
+
+        guard !isMonthSettled(monthKey: monthKey) else {
+            throw MonthlySettlementRepositoryError.alreadySettled
+        }
+
+        let settlement =
+            MonthlySettlementEntity(context: context)
+
+        settlement.id = UUID()
+        settlement.monthKey = monthKey
+        settlement.settledDate = settledDate
+
+        try context.save()
+    }
 
     private func fetchOrCreateHousemate(
         _ housemate: Housemate

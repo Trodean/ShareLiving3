@@ -1,47 +1,52 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="25249" systemVersion="26A434" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithSwiftData="YES" userDefinedModelVersionIdentifier="">
     <entity name="ChoreEntity" representedClassName=".ChoreEntity" syncable="YES" codeGenerationType="class">
-        <attribute name="dueDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
-        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
-        <attribute name="isCompleted" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
-        <attribute name="title" optional="YES" attributeType="String"/>
+        <attribute name="dueDate" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="isCompleted" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="title" attributeType="String"/>
         <relationship name="assignee" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="HousemateEntity" inverseName="assignedChores" inverseEntity="HousemateEntity"/>
         <relationship name="household" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="HouseholdEntity" inverseName="chores" inverseEntity="HouseholdEntity"/>
     </entity>
     <entity name="ExpenseShareEntity" representedClassName=".ExpenseShareEntity" syncable="YES" codeGenerationType="class">
-        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
-        <attribute name="isSettled" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
-        <attribute name="portions" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="isSettled" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="portions" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="settledDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <relationship name="expense" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SharedExpensesEntity" inverseName="shares" inverseEntity="SharedExpensesEntity"/>
         <relationship name="housemate" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="HousemateEntity" inverseName="expenseShares" inverseEntity="HousemateEntity"/>
     </entity>
     <entity name="HouseholdEntity" representedClassName=".HouseholdEntity" syncable="YES" codeGenerationType="class">
-        <attribute name="craateDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
-        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
-        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="craateDate" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="name" attributeType="String"/>
         <relationship name="chores" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ChoreEntity" inverseName="household" inverseEntity="ChoreEntity"/>
         <relationship name="expenses" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="SharedExpensesEntity" inverseName="household" inverseEntity="SharedExpensesEntity"/>
         <relationship name="members" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="HousemateEntity" inverseName="household" inverseEntity="HousemateEntity"/>
     </entity>
     <entity name="HousemateEntity" representedClassName=".HousemateEntity" syncable="YES" codeGenerationType="class">
-        <attribute name="avatarName" optional="YES" attributeType="String"/>
-        <attribute name="createdAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
-        <attribute name="email" optional="YES" attributeType="String"/>
-        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
-        <attribute name="isitCurrent" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
-        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="avatarName" attributeType="String"/>
+        <attribute name="createdAt" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="email" attributeType="String"/>
+        <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="isitCurrent" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="name" attributeType="String"/>
         <relationship name="assignedChores" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ChoreEntity" inverseName="assignee" inverseEntity="ChoreEntity"/>
         <relationship name="expenseShares" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ExpenseShareEntity" inverseName="housemate" inverseEntity="ExpenseShareEntity"/>
         <relationship name="household" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="HouseholdEntity" inverseName="members" inverseEntity="HouseholdEntity"/>
         <relationship name="paidExpenses" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="SharedExpensesEntity" inverseName="payer" inverseEntity="SharedExpensesEntity"/>
     </entity>
+    <entity name="MonthlySettlementEntity" representedClassName=".MonthlySettlementEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="monthKey" attributeType="String"/>
+        <attribute name="settledDate" attributeType="Date" usesScalarValueType="NO"/>
+    </entity>
     <entity name="SharedExpensesEntity" representedClassName=".SharedExpensesEntity" syncable="YES" codeGenerationType="class">
-        <attribute name="amount" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
-        <attribute name="category" optional="YES" attributeType="String"/>
-        <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
-        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
-        <attribute name="title" optional="YES" attributeType="String"/>
+        <attribute name="amount" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="category" attributeType="String"/>
+        <attribute name="date" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="title" attributeType="String"/>
         <relationship name="household" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="HouseholdEntity" inverseName="expenses" inverseEntity="HouseholdEntity"/>
         <relationship name="payer" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="HousemateEntity" inverseName="paidExpenses" inverseEntity="HousemateEntity"/>
         <relationship name="shares" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ExpenseShareEntity" inverseName="expense" inverseEntity="ExpenseShareEntity"/>

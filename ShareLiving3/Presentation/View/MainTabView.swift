@@ -115,10 +115,14 @@ struct MainTabView: View {
     let dueChoresUseCase = DueChoresUseCase(
         repository: choreRepo
     )
+    let settleMonthUseCase = SettleMonthUseCase(
+        repository: expenseRepo
+    )
     MainTabView(
         expenseViewModel: EViewModel(
             recordUseCase: expenseUseCase,
-            settlementPlanUseCase: settlementPlanUseCase
+            settlementPlanUseCase: settlementPlanUseCase,
+            settleMonthUseCase: settleMonthUseCase
         ),
         choreViewModel: ChoreViewModel(
             assignUseCase: assignUseCase,

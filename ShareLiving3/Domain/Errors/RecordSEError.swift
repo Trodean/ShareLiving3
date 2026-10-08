@@ -12,6 +12,8 @@ enum RecordSEError: Error, LocalizedError {
     case invalid_amount
     case no_expense_shares
     case invalid_share_portions
+    
+    case monthAlreadySettled
 
     var errorDescription: String? {
         switch self {
@@ -23,6 +25,9 @@ enum RecordSEError: Error, LocalizedError {
 
         case .invalid_share_portions:
             return "Selected housemate must have at least one portion."
+            
+        case .monthAlreadySettled:
+            return "This month has already been finalised. Add the expense to the current month instead."
         }
     }
 }
