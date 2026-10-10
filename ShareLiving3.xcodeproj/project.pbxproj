@@ -11,6 +11,7 @@
 		8BA1A30630784C1700543697 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BA1A30530784C1700543697 /* WidgetKit.framework */; };
 		8BA1A30830784C1700543697 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BA1A30730784C1700543697 /* SwiftUI.framework */; };
 		8BA1A31730784C1800543697 /* SL3WidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 8BA1A30330784C1700543697 /* SL3WidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		8BA1A3333078D9ED00543697 /* SL3Share.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 8BA1A3293078D9ED00543697 /* SL3Share.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -28,6 +29,13 @@
 			remoteGlobalIDString = 8BA1A30230784C1700543697;
 			remoteInfo = SL3WidgetExtension;
 		};
+		8BA1A3313078D9ED00543697 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 000000000000000000000000 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8BA1A3283078D9ED00543697;
+			remoteInfo = SL3Share;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -37,6 +45,7 @@
 			dstSubfolder = PlugIns;
 			files = (
 				8BA1A31730784C1800543697 /* SL3WidgetExtension.appex in Embed Foundation Extensions */,
+				8BA1A3333078D9ED00543697 /* SL3Share.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
 		};
@@ -50,6 +59,7 @@
 		8BA1A30530784C1700543697 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		8BA1A30730784C1700543697 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		8BA1A31E307850AB00543697 /* SL3WidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SL3WidgetExtension.entitlements; sourceTree = "<group>"; };
+		8BA1A3293078D9ED00543697 /* SL3Share.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = SL3Share.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -67,6 +77,20 @@
 			);
 			target = 8BA1A30230784C1700543697 /* SL3WidgetExtension */;
 		};
+		8BA1A3343078D9ED00543697 /* Exceptions for "SL3Share" folder in "SL3Share" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 8BA1A3283078D9ED00543697 /* SL3Share */;
+		};
+		8BA1A33E3078E02700543697 /* Exceptions for "ShareLiving3" folder in "SL3Share" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Share/BoardPost.swift,
+			);
+			target = 8BA1A3283078D9ED00543697 /* SL3Share */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -74,6 +98,7 @@
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				8BA1A3243078528800543697 /* Exceptions for "ShareLiving3" folder in "SL3WidgetExtension" target */,
+				8BA1A33E3078E02700543697 /* Exceptions for "ShareLiving3" folder in "SL3Share" target */,
 			);
 			path = ShareLiving3;
 			sourceTree = "<group>";
@@ -89,6 +114,14 @@
 				8BA1A31830784C1800543697 /* Exceptions for "SL3Widget" folder in "SL3WidgetExtension" target */,
 			);
 			path = SL3Widget;
+			sourceTree = "<group>";
+		};
+		8BA1A32A3078D9ED00543697 /* SL3Share */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				8BA1A3343078D9ED00543697 /* Exceptions for "SL3Share" folder in "SL3Share" target */,
+			);
+			path = SL3Share;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -111,6 +144,11 @@
 				8BA1A30630784C1700543697 /* WidgetKit.framework in Frameworks */,
 			);
 		};
+		8BA1A3263078D9ED00543697 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			files = (
+			);
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -122,6 +160,7 @@
 				000000000000000000000010 /* ShareLiving3 */,
 				8BA1A2DD30784A4700543697 /* ShareLiving3Tests */,
 				8BA1A30930784C1700543697 /* SL3Widget */,
+				8BA1A32A3078D9ED00543697 /* SL3Share */,
 				8BA1A30430784C1700543697 /* Frameworks */,
 				000000000000000000000020 /* Products */,
 			);
@@ -133,6 +172,7 @@
 				000000000000000000000120 /* ShareLiving3.app */,
 				8BA1A2DC30784A4700543697 /* ShareLiving3Tests.xctest */,
 				8BA1A30330784C1700543697 /* SL3WidgetExtension.appex */,
+				8BA1A3293078D9ED00543697 /* SL3Share.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -162,6 +202,7 @@
 			);
 			dependencies = (
 				8BA1A31630784C1800543697 /* PBXTargetDependency */,
+				8BA1A3323078D9ED00543697 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				000000000000000000000010 /* ShareLiving3 */,
@@ -210,6 +251,24 @@
 			productReference = 8BA1A30330784C1700543697 /* SL3WidgetExtension.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
+		8BA1A3283078D9ED00543697 /* SL3Share */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8BA1A3353078D9ED00543697 /* Build configuration list for PBXNativeTarget "SL3Share" */;
+			buildPhases = (
+				8BA1A3253078D9ED00543697 /* Sources */,
+				8BA1A3263078D9ED00543697 /* Frameworks */,
+				8BA1A3273078D9ED00543697 /* Resources */,
+			);
+			buildRules = (
+			);
+			fileSystemSynchronizedGroups = (
+				8BA1A32A3078D9ED00543697 /* SL3Share */,
+			);
+			name = SL3Share;
+			productName = SL3Share;
+			productReference = 8BA1A3293078D9ED00543697 /* SL3Share.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -228,6 +287,9 @@
 						TestTargetID = 000000000000000100000000;
 					};
 					8BA1A30230784C1700543697 = {
+						CreatedOnToolsVersion = 27.0;
+					};
+					8BA1A3283078D9ED00543697 = {
 						CreatedOnToolsVersion = 27.0;
 					};
 				};
@@ -249,6 +311,7 @@
 				000000000000000100000000 /* ShareLiving3 */,
 				8BA1A2DB30784A4700543697 /* ShareLiving3Tests */,
 				8BA1A30230784C1700543697 /* SL3WidgetExtension */,
+				8BA1A3283078D9ED00543697 /* SL3Share */,
 			);
 		};
 /* End PBXProject section */
@@ -265,6 +328,11 @@
 			);
 		};
 		8BA1A30130784C1700543697 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			files = (
+			);
+		};
+		8BA1A3273078D9ED00543697 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			files = (
 			);
@@ -288,6 +356,11 @@
 			files = (
 			);
 		};
+		8BA1A3253078D9ED00543697 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			files = (
+			);
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -300,6 +373,11 @@
 			isa = PBXTargetDependency;
 			target = 8BA1A30230784C1700543697 /* SL3WidgetExtension */;
 			targetProxy = 8BA1A31530784C1800543697 /* PBXContainerItemProxy */;
+		};
+		8BA1A3323078D9ED00543697 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8BA1A3283078D9ED00543697 /* SL3Share */;
+			targetProxy = 8BA1A3313078D9ED00543697 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -630,6 +708,69 @@
 			};
 			name = Release;
 		};
+		8BA1A3363078D9ED00543697 /* Debug configuration for PBXNativeTarget "SL3Share" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = SL3Share/SL3Share.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = H33QCTG33D;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = SL3Share/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = SL3Share;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yangpengpersonalteam.ShareLiving3.SL3ShareExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		8BA1A3373078D9ED00543697 /* Release configuration for PBXNativeTarget "SL3Share" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = SL3Share/SL3Share.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = H33QCTG33D;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = SL3Share/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = SL3Share;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yangpengpersonalteam.ShareLiving3.SL3ShareExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -662,6 +803,14 @@
 			buildConfigurations = (
 				8BA1A31A30784C1800543697 /* Debug configuration for PBXNativeTarget "SL3WidgetExtension" */,
 				8BA1A31B30784C1800543697 /* Release configuration for PBXNativeTarget "SL3WidgetExtension" */,
+			);
+			defaultConfigurationName = Release;
+		};
+		8BA1A3353078D9ED00543697 /* Build configuration list for PBXNativeTarget "SL3Share" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8BA1A3363078D9ED00543697 /* Debug configuration for PBXNativeTarget "SL3Share" */,
+				8BA1A3373078D9ED00543697 /* Release configuration for PBXNativeTarget "SL3Share" */,
 			);
 			defaultConfigurationName = Release;
 		};

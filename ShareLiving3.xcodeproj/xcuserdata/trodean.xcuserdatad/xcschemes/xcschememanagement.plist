@@ -9,6 +9,11 @@
 			<key>orderHint</key>
 			<integer>0</integer>
 		</dict>
+		<key>SL3Share.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>2</integer>
+		</dict>
 		<key>SL3WidgetExtension.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
@@ -33,6 +38,11 @@
 			<true/>
 		</dict>
 		<key>8BA1A30230784C1700543697</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>8BA1A3283078D9ED00543697</key>
 		<dict>
 			<key>primary</key>
 			<true/>

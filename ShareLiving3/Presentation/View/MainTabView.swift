@@ -5,6 +5,7 @@
 //  Created by Yang Peng on 16/9/2026.
 //
 // Controls navigation between the home page and main household features, also passes shared view models and housemate data to the screens if needed.
+
 import SwiftUI
 import WidgetKit
 
@@ -12,7 +13,7 @@ struct MainTabView: View {
 
     @ObservedObject var expenseViewModel: EViewModel
     @ObservedObject var choreViewModel: ChoreViewModel
-    
+
     let housemates = [
         Housemate(id: UUID(), name: "Yang"),
         Housemate(id: UUID(), name: "Jason"),
@@ -26,8 +27,11 @@ struct MainTabView: View {
     @State private var selectedTab = 0
 
     var body: some View {
+
         Group {
+
             if showHomePage {
+
                 HomePageView(
                     openExpenses: {
                         selectedTab = 0
@@ -38,16 +42,20 @@ struct MainTabView: View {
                         showHomePage = false
                     },
                     openGrocery: {
-                        selectedTab = 2
+                        selectedTab = 3
                         showHomePage = false
                     },
                     openHousemates: {
-                        selectedTab = 3
+                        selectedTab = 4
+                        showHomePage = false
+                    },
+                    openBoard: {
+                        selectedTab = 2
                         showHomePage = false
                     }
                 )
-
             } else {
+
                 TabView(selection: $selectedTab) {
 
                     ExpensesView(
@@ -72,6 +80,13 @@ struct MainTabView: View {
                     }
                     .tag(1)
 
+                    HouseholdBoardView()
+                        .tabItem {
+                            Image(systemName: "megaphone")
+                            Text("Board")
+                        }
+                        .tag(2)
+
                     GroceryView(
                         onHome: goHome
                     )
@@ -79,7 +94,7 @@ struct MainTabView: View {
                         Image(systemName: "cart")
                         Text("Grocery")
                     }
-                    .tag(2)
+                    .tag(3)
 
                     HousematesView(
                         onHome: goHome
@@ -88,7 +103,7 @@ struct MainTabView: View {
                         Image(systemName: "person.3")
                         Text("Housemates")
                     }
-                    .tag(3)
+                    .tag(4)
                 }
             }
         }
@@ -103,10 +118,10 @@ struct MainTabView: View {
         }
     }
 
-
     private func goHome() {
         showHomePage = true
     }
+
     private func updateWidgetData() {
 
         SharedWidgetData.save(
@@ -121,26 +136,33 @@ struct MainTabView: View {
 #Preview {
 
     let expenseRepo = InMemorySERepository()
+
     let expenseUseCase = RecordUseCases(
         repository: expenseRepo
     )
+
     let settlementPlanUseCase = SettlementPlanUseCase(
         repository: expenseRepo
     )
 
-    let choreRepo = InMemoryChoreRepo()
-    let assignUseCase = AHCUseCase(
-        repository: choreRepo
-    )
-    let completeUseCase = CompleteChoreUseCase(
-        repository: choreRepo
-    )
-    let dueChoresUseCase = DueChoresUseCase(
-        repository: choreRepo
-    )
     let settleMonthUseCase = SettleMonthUseCase(
         repository: expenseRepo
     )
+
+    let choreRepo = InMemoryChoreRepo()
+
+    let assignUseCase = AHCUseCase(
+        repository: choreRepo
+    )
+
+    let completeUseCase = CompleteChoreUseCase(
+        repository: choreRepo
+    )
+
+    let dueChoresUseCase = DueChoresUseCase(
+        repository: choreRepo
+    )
+
     MainTabView(
         expenseViewModel: EViewModel(
             recordUseCase: expenseUseCase,
