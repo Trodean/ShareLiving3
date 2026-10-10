@@ -59,7 +59,6 @@ struct BoardPost: Codable, Identifiable {
         self.isResolved = isResolved
     }
 }
-
 enum BoardPostStore{
 
     static let appGroupID =
@@ -67,62 +66,136 @@ enum BoardPostStore{
 
     private static let postsKey =
         "householdBoardPosts"
-
-    private static var defaults: UserDefaults? {
+    private static var appGroupDefaults: UserDefaults? {
         UserDefaults(suiteName: appGroupID)
     }
 
     static func loadPosts() -> [BoardPost] {
+        loadPosts(from: appGroupDefaults)
+    }
+    static func addPost(_ post: BoardPost) {
+        addPost(
+            post,
+            to: appGroupDefaults
+        )
+    }
+    static func deletePost(id: UUID) {
+        deletePost(
+            id: id,
+            from: appGroupDefaults
+        )
+    }
+    static func toggleResolved(id: UUID) {
+        toggleResolved(
+            id: id,
+            in: appGroupDefaults
+        )
+    }
+
+    //MARK: For Unit Tests
+
+    static func loadPosts(
+        from defaults: UserDefaults?
+    ) -> [BoardPost] {
+
         guard
-            let data = defaults?.data(forKey: postsKey),
-            let posts = try? JSONDecoder().decode(
-                [BoardPost].self,
-                from: data
-            )
+            let data = defaults?.data(
+                forKey: postsKey
+            ),
+            let posts = try? JSONDecoder()
+                .decode(
+                    [BoardPost].self,
+                    from: data
+                )
         else {
             return []
         }
+
         return posts
     }
 
-    static func addPost(_ post: BoardPost) {
-        var posts = loadPosts()
+    static func addPost(
+        _ post: BoardPost,
+        to defaults: UserDefaults?
+    ) {
 
-        posts.insert(post, at: 0)
-        if posts.count > 50 {
-            posts = Array(posts.prefix(50))
+        var posts =
+            loadPosts(from: defaults)
+
+        posts.insert(
+            post,
+            at: 0
+        )
+        if posts.count > 50{
+            posts = Array(
+                posts.prefix(50)
+            )
         }
-        save(posts)
+
+        save(
+            posts,
+            to: defaults
+        )
     }
 
-    static func deletePost(id: UUID) {
-        var posts = loadPosts()
+    static func deletePost(
+        id: UUID,
+        from defaults: UserDefaults?
+    ) {
+        var posts =
+            loadPosts(from: defaults)
 
         posts.removeAll {
             $0.id == id
         }
-        save(posts)
+
+        save(
+            posts,
+            to: defaults
+        )
     }
+    static func toggleResolved(
+        id: UUID,
+        in defaults: UserDefaults?
+    ) {
+        var posts =
+            loadPosts(from: defaults)
 
-    static func toggleResolved(id: UUID) {
-        var posts = loadPosts()
-
-        guard let index = posts.firstIndex(
-            where: { $0.id == id }
-        ) else {
+        guard let index =
+                posts.firstIndex(
+                    where: {
+                        $0.id == id
+                    }
+                )
+        else {
             return
         }
 
-        posts[index].isResolved.toggle()
-        save(posts)
+        posts[index]
+            .isResolved
+            .toggle()
+
+        save(
+            posts,
+            to: defaults
+        )
     }
 
     private static func save(
-        _ posts: [BoardPost]
+        _ posts: [BoardPost],
+        to defaults: UserDefaults?
     ) {
-        guard let data = try? JSONEncoder().encode(posts) else {
+
+        guard let data =
+                try? JSONEncoder()
+                    .encode(posts)
+        else {
             return
         }
-        defaults?.set(data, forKey: postsKey)
+
+        defaults?.set(
+            data,
+            forKey: postsKey
+        )
     }
 }

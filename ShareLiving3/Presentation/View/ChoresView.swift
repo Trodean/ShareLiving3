@@ -97,6 +97,10 @@ struct ChoresView: View{
                 .padding(.horizontal, 20)
                 .padding(.top, 12)
             }
+            .background(
+                Color("AppBackground")
+                    .ignoresSafeArea()
+            )
             .navigationTitle("Chores")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -195,8 +199,9 @@ struct ChoresView: View{
         }
     }
 
-    // A3: Due Chores summary
+    //New: Due Chores summary
     private var dueChoresSummary: some View {
+
         HStack(spacing: 14) {
 
             Image(
@@ -205,9 +210,17 @@ struct ChoresView: View{
                     : "exclamationmark.circle.fill"
             )
             .font(.title2)
-            .foregroundStyle(Color("SharedGreen"))
+            .foregroundStyle(dueSummaryColor)
+            .padding(12)
+            .background(
+                Circle()
+                    .fill(
+                        dueSummaryColor.opacity(0.12)
+                    )
+            )
 
             VStack(alignment: .leading, spacing: 4) {
+
                 Text("Due Chores")
                     .font(.headline)
 
@@ -217,19 +230,38 @@ struct ChoresView: View{
             }
 
             Spacer()
+
+            if !choreViewModel.dueChores.isEmpty {
+
+                Text("\(choreViewModel.dueChores.count)")
+                    .font(.title2)
+                    .fontWeight(.bold)
+                    .foregroundStyle(dueSummaryColor)
+            }
         }
-        .padding()
-        .frame(maxWidth: .infinity)
+        .padding(16)
+        .frame(
+            maxWidth: .infinity,
+            alignment: .leading
+        )
         .background(
-            RoundedRectangle(cornerRadius: 16)
-                .fill(Color("SharedOrange"))
+            RoundedRectangle(
+                cornerRadius: 18,
+                style: .continuous
+            )
+            .fill(Color.white)
         )
         .overlay(
-            RoundedRectangle(cornerRadius: 16)
-                .stroke(lineWidth: 1)
+            RoundedRectangle(
+                cornerRadius: 18,
+                style: .continuous
+            )
+            .stroke(
+                Color.black.opacity(0.04),
+                lineWidth: 1
+            )
         )
     }
-
     private var dueChoresSummaryText: String {
 
         let overdueCount = overdueChores.count
@@ -238,18 +270,25 @@ struct ChoresView: View{
         if overdueCount == 0 && todayCount == 0 {
             return "You're all caught up."
         }
-
         if overdueCount == 0 {
             return "\(todayCount) due today"
         }
-
         if todayCount == 0 {
             return "\(overdueCount) overdue"
         }
-
         return "\(overdueCount) overdue · \(todayCount) due today"
     }
-
+    
+    private var dueSummaryColor: Color {
+        if !overdueChores.isEmpty {
+            return .red
+        }
+        if !dueTodayChores.isEmpty {
+            return .orange
+        }
+        return Color("SharedGreen")
+    }
+    
     private var allChoresView: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("All Chores")
@@ -287,19 +326,45 @@ struct ChoresView: View{
             }
         }
         .background(
-            RoundedRectangle(cornerRadius: 16)
-                .stroke(lineWidth: 1)
+            RoundedRectangle(
+                cornerRadius: 18,
+                style: .continuous
+            )
+            .fill(Color.white)
+        )
+        .overlay(
+            RoundedRectangle(
+                cornerRadius: 18,
+                style: .continuous
+            )
+            .stroke(
+                Color.black.opacity(0.04),
+                lineWidth: 1
+            )
         )
     }
-    private func emptyMessage(_ message: String) -> some View {
-        Text(message)
-            .foregroundStyle(.secondary)
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 28)
-            .background(
-                RoundedRectangle(cornerRadius: 16)
-                    .stroke(lineWidth: 1)
+    private func emptyMessage(
+        _ message: String
+    ) -> some View {
+
+        HStack(spacing: 8) {
+            Image(systemName: "checkmark.circle")
+                .foregroundStyle(Color("SharedGreen"))
+            Text(message)
+                .foregroundStyle(.secondary)
+
+            Spacer()
+        }
+        .font(.subheadline)
+        .padding(16)
+        .frame(maxWidth: .infinity)
+        .background(
+            RoundedRectangle(
+                cornerRadius: 16,
+                style: .continuous
             )
+            .fill(Color.white)
+        )
     }
 
     private func statusText(for chore: Chore) -> String {
@@ -326,6 +391,7 @@ struct ChoresView: View{
 }
 
 struct ChoreRowView: View {
+
     let title: String
     let assignee: String
     let status: String
@@ -338,32 +404,78 @@ struct ChoreRowView: View {
             Button {
                 onComplete()
             } label: {
+
                 Image(
                     systemName: isCompleted
                         ? "checkmark.circle.fill"
                         : "circle"
                 )
                 .font(.title2)
+                .foregroundStyle(
+                    isCompleted
+                        ? Color("SharedGreen")
+                        : Color.secondary
+                )
             }
             .buttonStyle(.plain)
             .disabled(isCompleted)
 
-            VStack(alignment: .leading, spacing: 5) {
+            VStack(
+                alignment: .leading,
+                spacing: 5
+            ) {
+
                 Text(title)
                     .font(.headline)
-                Text(assignee)
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                    .strikethrough(isCompleted)
+                    .foregroundStyle(
+                        isCompleted
+                            ? Color.secondary
+                            : Color.primary
+                    )
+                Label(
+                    assignee,
+                    systemImage: "person.fill"
+                )
+                .font(.caption)
+                .foregroundStyle(.secondary)
             }
 
             Spacer()
-
             Text(status)
-                .font(.subheadline)
-                .fontWeight(.semibold)
+                .font(.caption2)
+                .fontWeight(.bold)
+                .foregroundStyle(statusColor)
+                .padding(.horizontal, 9)
+                .padding(.vertical, 5)
+                .background(
+                    Capsule()
+                        .fill(
+                            statusColor.opacity(0.12)
+                        )
+                )
         }
         .padding()
         .frame(minHeight: 72)
+        .opacity(
+            isCompleted ? 0.65 : 1
+        )
+    }
+
+    private var statusColor: Color {
+
+        if isCompleted {
+            return Color("SharedGreen")
+        }
+        switch status {
+
+        case "OVERDUE":
+            return .red
+        case "TODAY":
+            return .orange
+        default:
+            return Color("SharedGreen")
+        }
     }
 }
 

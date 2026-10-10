@@ -45,6 +45,11 @@ struct ExpensesView: View{
                 .padding(.horizontal, 20)
                 .padding(.top, 12)
             }
+            .scrollContentBackground(.hidden)
+            .background(
+                Color("AppBackground")
+                    .ignoresSafeArea()
+            )
             .navigationTitle("Expenses")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -101,33 +106,85 @@ struct ExpensesView: View{
     }
 
     private var summaryCard: some View{
-        VStack(alignment: .leading, spacing: 10) {
 
-            Text("\(monthName) Shared Expenses")
-                .font(.headline)
-            Text("Total Spent")
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
+        VStack(alignment: .leading, spacing: 18) {
+
+            HStack {
+                VStack(alignment: .leading, spacing: 4) {
+
+                    Text("\(monthName) Shared Expenses")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+
+                    Text("Total Spent")
+                        .font(.headline)
+                }
+                Spacer()
+                Image(systemName: "dollarsign.circle.fill")
+                    .font(.title2)
+                    .foregroundStyle(Color("SharedGreen"))
+            }
 
             Text("$\(totalSpent, specifier: "%.2f")")
-                .font(.system(size: 38, weight: .semibold))
-            ProgressView(value: 0.65)
-                .padding(.vertical, 4)
+                .font(
+                    .system(
+                        size: 38,
+                        weight: .bold,
+                        design: .rounded
+                    )
+                )
 
-            VStack(alignment: .leading, spacing: 4) {
-                Text(balanceTitle)
-                    .font(.headline)
+            Divider()
 
-                Text("$\(balanceAmount, specifier: "%.2f")")
-                    .font(.title3)
-                    .fontWeight(.semibold)
+            HStack {
+
+                VStack(alignment: .leading, spacing: 4) {
+
+                    Text(balanceTitle)
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+
+                    Text("$\(balanceAmount, specifier: "%.2f")")
+                        .font(.title2)
+                        .fontWeight(.bold)
+                        .foregroundStyle(balanceColor)
+                }
+
+                Spacer()
+
+                Image(systemName: balanceIcon)
+                    .font(.title2)
+                    .foregroundStyle(balanceColor)
+                    .padding(12)
+                    .background(
+                        Circle()
+                            .fill(
+                                balanceColor.opacity(0.12)
+                            )
+                    )
             }
         }
         .padding(18)
-        .frame(maxWidth: .infinity, alignment: .leading)
+        .frame(
+            maxWidth: .infinity,
+            alignment: .leading
+        )
         .background(
-            RoundedRectangle(cornerRadius: 16)
-                .stroke(lineWidth: 1)
+            RoundedRectangle(
+                cornerRadius: 20,
+                style: .continuous
+            )
+            .fill(Color.white)
+        )
+        .overlay(
+            RoundedRectangle(
+                cornerRadius: 20,
+                style: .continuous
+            )
+            .stroke(
+                Color.black.opacity(0.04),
+                lineWidth: 1
+            )
         )
     }
     
@@ -135,16 +192,35 @@ struct ExpensesView: View{
         if currentUserBalance < 0 {
             return "You owe"
         }
-
         if currentUserBalance > 0 {
             return "You are owed"
         }
-
         return "You're settled"
     }
-
+    
     private var balanceAmount: Double {
         abs(currentUserBalance)
+    }
+    
+    private var balanceColor: Color {
+        if currentUserBalance > 0 {
+            return Color("SharedGreen")
+        }
+        if currentUserBalance < 0 {
+            return .orange
+        }
+        return Color("SharedGreen")
+    }
+
+    private var balanceIcon: String {
+
+        if currentUserBalance > 0 {
+            return "arrow.down.left.circle.fill"
+        }
+        if currentUserBalance < 0 {
+            return "arrow.up.right.circle.fill"
+        }
+        return "checkmark.circle.fill"
     }
 
     //NEw: Repayment Plan
@@ -187,8 +263,21 @@ struct ExpensesView: View{
                 }
                 .padding()
                 .background(
-                    RoundedRectangle(cornerRadius: 16)
-                        .stroke(lineWidth: 1)
+                    RoundedRectangle(
+                        cornerRadius: 18,
+                        style: .continuous
+                    )
+                    .fill(Color.white)
+                )
+                .overlay(
+                    RoundedRectangle(
+                        cornerRadius: 18,
+                        style: .continuous
+                    )
+                    .stroke(
+                        Color.black.opacity(0.04),
+                        lineWidth: 1
+                    )
                 )
 
             } else {

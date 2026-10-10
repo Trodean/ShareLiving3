@@ -10,9 +10,10 @@ import SwiftUI
 
 @main
 struct SL3WidgetBundle: WidgetBundle {
+
     var body: some Widget {
-        SL3Widget()
-        SL3WidgetControl()
-        SL3WidgetLiveActivity()
+        SL3ChoreWidget()
+        SL3RepaymentWidget()
+        SL3SummaryWidget()
     }
 }

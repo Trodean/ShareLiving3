@@ -16,107 +16,178 @@ struct GroceryView: View {
 
     var body: some View {
         NavigationStack {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 24) {
 
-                    VStack(alignment: .leading, spacing: 12) {
-                        Text("URGENT")
-                            .font(.title2)
-                            .fontWeight(.semibold)
+            ZStack {
 
-                        VStack(spacing: 0) {
+                Color("AppBackground")
+                    .ignoresSafeArea()
+
+                ScrollView {
+
+                    VStack(
+                        alignment: .leading,
+                        spacing: 26
+                    ) {
+
+                        grocerySection(
+                            title: "Urgent",
+                            icon: "exclamationmark.circle.fill",
+                            color: .orange
+                        ) {
+
                             GroceryItemRow(
                                 name: "Toilet Paper",
                                 quantity: 1,
-                                assignee: "Roommate"
+                                assignee: "Roommate",
+                                accentColor: .orange
                             )
 
                             Divider()
+                                .padding(.leading, 54)
 
                             GroceryItemRow(
                                 name: "Soy Sauce",
                                 quantity: 1,
-                                assignee: "You"
+                                assignee: "You",
+                                accentColor: .orange
                             )
                         }
-                        .background(
-                            RoundedRectangle(cornerRadius: 16)
-                                .stroke(lineWidth: 1)
-                        )
-                    }
+                        grocerySection(
+                            title: "Non-urgent",
+                            icon: "cart.fill",
+                            color: Color("SharedGreen")
+                        ) {
 
-                    VStack(alignment: .leading, spacing: 12) {
-                        Text("Non-urgent")
-                            .font(.title2)
-                            .fontWeight(.semibold)
-
-                        VStack(spacing: 0) {
                             GroceryItemRow(
                                 name: "Rubbish Bags",
                                 quantity: 1,
-                                assignee: "Roommate"
+                                assignee: "Roommate",
+                                accentColor: Color("SharedGreen")
                             )
 
                             Divider()
+                                .padding(.leading, 54)
 
                             GroceryItemRow(
                                 name: "Milk",
                                 quantity: 1,
-                                assignee: "You"
+                                assignee: "You",
+                                accentColor: Color("SharedGreen")
                             )
 
                             Divider()
+                                .padding(.leading, 54)
 
                             GroceryItemRow(
                                 name: "Coke",
                                 quantity: 1,
-                                assignee: "You"
+                                assignee: "You",
+                                accentColor: Color("SharedGreen")
                             )
 
                             Divider()
+                                .padding(.leading, 54)
 
                             GroceryItemRow(
                                 name: "TimTam",
                                 quantity: 1,
-                                assignee: "Roommate"
+                                assignee: "Roommate",
+                                accentColor: Color("SharedGreen")
                             )
                         }
-                        .background(
-                            RoundedRectangle(cornerRadius: 16)
-                                .stroke(lineWidth: 1)
-                        )
-                    }
 
-                    Spacer(minLength: 30)
+                        Spacer(minLength: 30)
+                    }
+                    .padding(.horizontal, 20)
+                    .padding(.top, 12)
                 }
-                .padding(.horizontal, 20)
-                .padding(.top, 12)
             }
             .navigationTitle("Grocery List")
             .navigationBarTitleDisplayMode(.inline)
+            .tint(Color("SharedGreen"))
             .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
+
+                ToolbarItem(
+                    placement: .topBarLeading
+                ) {
+
                     Button {
                         onHome()
                     } label: {
-                        Image(systemName: "house.fill")
+                        Image(
+                            systemName: "house.fill"
+                        )
                     }
                 }
 
-                ToolbarItem(placement: .topBarTrailing) {
+                ToolbarItem(
+                    placement: .topBarTrailing
+                ) {
+
                     Button {
                         showAddGroceryItem = true
                     } label: {
+
                         Image(systemName: "plus")
                             .font(.title2)
                     }
                 }
             }
         }
-        .sheet(isPresented: $showAddGroceryItem) {
+        .sheet(
+            isPresented: $showAddGroceryItem
+        ) {
+
             NavigationStack {
                 AddGroceryItemView()
             }
+        }
+    }
+
+    private func grocerySection<Content: View>(
+        title: String,
+        icon: String,
+        color: Color,
+        @ViewBuilder content: () -> Content
+    ) -> some View {
+
+        VStack(
+            alignment: .leading,
+            spacing: 12
+        ) {
+
+            HStack(spacing: 8) {
+
+                Image(systemName: icon)
+                    .foregroundStyle(color)
+
+                Text(title)
+                    .font(.title2)
+                    .fontWeight(.semibold)
+
+                Spacer()
+            }
+
+            VStack(spacing: 0) {
+                content()
+            }
+            .background(
+                RoundedRectangle(
+                    cornerRadius: 18,
+                    style: .continuous
+                )
+                .fill(Color.white)
+            )
+            .overlay(
+                RoundedRectangle(
+                    cornerRadius: 18,
+                    style: .continuous
+                )
+                .stroke(
+                    Color.black.opacity(0.04),
+                    lineWidth: 1
+                )
+            )
         }
     }
 }
@@ -126,29 +197,72 @@ struct GroceryItemRow: View {
     let name: String
     let quantity: Int
     let assignee: String
+    let accentColor: Color
 
     var body: some View {
-        HStack(spacing: 12) {
 
-            VStack(alignment: .leading, spacing: 4) {
+        HStack(spacing: 14) {
+
+            Image(
+                systemName: "basket.fill"
+            )
+            .font(.headline)
+            .foregroundStyle(accentColor)
+            .frame(width: 38, height: 38)
+            .background(
+                Circle()
+                    .fill(
+                        accentColor.opacity(0.10)
+                    )
+            )
+
+            VStack(
+                alignment: .leading,
+                spacing: 5
+            ) {
+
                 Text(name)
                     .font(.headline)
 
-                Text("×\(quantity)")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                Text(
+                    quantity == 1
+                        ? "1 item"
+                        : "\(quantity) items"
+                )
+                .font(.caption)
+                .foregroundStyle(.secondary)
             }
 
             Spacer()
 
             Text(assignee)
-                .font(.subheadline)
-                .fontWeight(.medium)
+                .font(.caption)
+                .fontWeight(.semibold)
+                .foregroundStyle(
+                    assignee == "You"
+                        ? Color("SharedGreen")
+                        : Color.secondary
+                )
+                .padding(.horizontal, 9)
+                .padding(.vertical, 5)
+                .background(
+                    Capsule()
+                        .fill(
+                            assignee == "You"
+                                ? Color("SharedGreen")
+                                    .opacity(0.10)
+                                : Color.gray
+                                    .opacity(0.10)
+                        )
+                )
         }
-        .padding()
-        .frame(minHeight: 68)
+        .padding(14)
+        .frame(minHeight: 70)
     }
 }
+
+
+
 
 #Preview {
     GroceryView(

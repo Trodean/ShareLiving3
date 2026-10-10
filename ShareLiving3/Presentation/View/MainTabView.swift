@@ -22,7 +22,7 @@ struct MainTabView: View {
         Housemate(id: UUID(), name: "Damian"),
         Housemate(id: UUID(), name: "Luna")
     ]
-
+    
     @State private var showHomePage = true
     @State private var selectedTab = 0
 
@@ -115,6 +115,35 @@ struct MainTabView: View {
         }
         .onChange(of: expenseViewModel.settlementPlan.count) { _, _ in
             updateWidgetData()
+        }
+        .onOpenURL { url in
+
+            guard url.scheme == "shareliving3" else {
+                return
+            }
+
+            showHomePage = false
+
+            switch url.host {
+
+            case "expenses":
+                selectedTab = 0
+
+            case "chores":
+                selectedTab = 1
+
+            case "board":
+                selectedTab = 2
+
+            case "grocery":
+                selectedTab = 3
+
+            case "housemates":
+                selectedTab = 4
+
+            default:
+                showHomePage = true
+            }
         }
     }
 

@@ -31,7 +31,7 @@ struct HomePageView: View {
 
     var body: some View {
         NavigationStack {
-            VStack(spacing: 18) {
+            VStack(spacing: 14) {
 
                 HStack {
                     Button {
@@ -128,19 +128,14 @@ struct HomePageView: View {
 
     private var boardPreview: some View {
 
-        VStack(
-            alignment: .leading,
-            spacing: 12
-        ) {
+        VStack(alignment: .leading, spacing: 10) {
 
             HStack {
 
-                HStack(spacing: 8) {
-
+                HStack(spacing: 7) {
                     Image(systemName: "megaphone.fill")
-                        .foregroundStyle(
-                            Color("SharedGreen")
-                        )
+                        .font(.subheadline)
+                        .foregroundStyle(Color("SharedGreen"))
 
                     Text("Household Board")
                         .font(.headline)
@@ -148,127 +143,171 @@ struct HomePageView: View {
 
                 Spacer()
 
-                Button("See All") {
+                Button {
                     openBoard()
+                } label: {
+                    HStack(spacing: 3) {
+                        Text("See All")
+
+                        Image(systemName: "chevron.right")
+                            .font(.caption2)
+                    }
+                    .font(.caption)
+                    .fontWeight(.semibold)
+                    .foregroundStyle(Color("SharedGreen"))
                 }
-                .font(.subheadline)
             }
 
             if latestBoardPosts.isEmpty {
 
-                Text("No new household updates.")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                    .padding(.vertical, 6)
+                HStack(spacing: 10) {
+
+                    Image(systemName: "checkmark.circle")
+                        .foregroundStyle(Color("SharedGreen"))
+
+                    Text("No new household updates")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+
+                    Spacer()
+                }
+                .padding(.vertical, 6)
 
             } else {
 
-                ForEach(latestBoardPosts) { post in
+                ForEach(
+                    Array(latestBoardPosts.enumerated()),
+                    id: \.element.id
+                ) { index, post in
 
                     Button {
                         openBoard()
                     } label: {
 
-                        HStack(
-                            alignment: .top,
-                            spacing: 12
+                        VStack(
+                            alignment: .leading,
+                            spacing: 6
                         ) {
 
-                            Image(
-                                systemName:
-                                    categoryIcon(
-                                        post.category
-                                    )
-                            )
-                            .foregroundStyle(
-                                Color("SharedGreen")
-                            )
-                            .frame(width: 24)
+                            categoryBadge(post.category)
 
-                            VStack(
-                                alignment: .leading,
-                                spacing: 4
+                            HStack(
+                                alignment: .center,
+                                spacing: 8
                             ) {
 
-                                Text(
-                                    post.category
-                                        .displayName
-                                )
-                                .font(.caption)
-                                .fontWeight(.semibold)
-                                .foregroundStyle(
-                                    .secondary
-                                )
+                                VStack(
+                                    alignment: .leading,
+                                    spacing: 3
+                                ) {
 
-                                if let note = post.note,
-                                   !note.isEmpty {
+                                    if let note = post.note,
+                                       !note.isEmpty {
 
-                                    Text(note)
-                                        .font(.subheadline)
-                                        .fontWeight(.medium)
-                                        .foregroundStyle(
-                                            Color("PrimaryText")
+                                        Text(note)
+                                            .font(.subheadline)
+                                            .fontWeight(.medium)
+                                            .foregroundStyle(
+                                                Color("PrimaryText")
+                                            )
+                                            .lineLimit(1)
+
+                                    } else if let sourceText =
+                                                post.sourceText,
+                                              !sourceText.isEmpty {
+
+                                        Text(sourceText)
+                                            .font(.subheadline)
+                                            .fontWeight(.medium)
+                                            .foregroundStyle(
+                                                Color("PrimaryText")
+                                            )
+                                            .lineLimit(1)
+
+                                    } else if let urlString =
+                                                post.urlString {
+
+                                        Text(urlString)
+                                            .font(.subheadline)
+                                            .foregroundStyle(
+                                                Color("PrimaryText")
+                                            )
+                                            .lineLimit(1)
+                                    }
+
+                                    Text(
+                                        post.createdAt.formatted(
+                                            date: .abbreviated,
+                                            time: .shortened
                                         )
-                                        .lineLimit(2)
-
-                                } else if
-                                    let sourceText =
-                                        post.sourceText,
-                                    !sourceText.isEmpty {
-
-                                    Text(sourceText)
-                                        .font(.subheadline)
-                                        .foregroundStyle(
-                                            Color("PrimaryText")
-                                        )
-                                        .lineLimit(2)
-
-                                } else if
-                                    let urlString =
-                                        post.urlString {
-
-                                    Text(urlString)
-                                        .font(.subheadline)
-                                        .foregroundStyle(
-                                            Color("PrimaryText")
-                                        )
-                                        .lineLimit(1)
+                                    )
+                                    .font(.caption2)
+                                    .foregroundStyle(.secondary)
                                 }
+
+                                Spacer()
+
+                                Image(systemName: "chevron.right")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
                             }
-
-                            Spacer()
-
-                            Image(
-                                systemName: "chevron.right"
-                            )
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
                         }
+                        .contentShape(Rectangle())
                     }
                     .buttonStyle(.plain)
 
-                    if post.id !=
-                        latestBoardPosts.last?.id {
+                    if index <
+                        latestBoardPosts.count - 1 {
 
                         Divider()
                     }
                 }
             }
         }
-        .padding(16)
+        .padding(14)
         .background(
-            RoundedRectangle(cornerRadius: 16)
+            RoundedRectangle(cornerRadius: 18)
                 .fill(
                     Color("SharedOrange")
-                        .opacity(0.35)
+                        .opacity(0.22)
                 )
         )
         .overlay(
-            RoundedRectangle(cornerRadius: 16)
-                .stroke(lineWidth: 1)
+            RoundedRectangle(cornerRadius: 18)
+                .stroke(
+                    Color("SharedOrange")
+                        .opacity(0.7),
+                    lineWidth: 1
+                )
         )
     }
+    
+    private func categoryBadge(
+        _ category: BoardCategory
+    ) -> some View {
 
+        HStack(spacing: 5) {
+
+            Image(
+                systemName: categoryIcon(category)
+            )
+
+            Text(category.displayName)
+        }
+        .font(.caption2)
+        .fontWeight(.semibold)
+        .foregroundStyle(Color("SharedGreen"))
+        .padding(.horizontal, 8)
+        .padding(.vertical, 4)
+        .background(
+            Capsule()
+                .fill(
+                    Color("SharedGreen")
+                        .opacity(0.12)
+                )
+        )
+    }
+    
     private func refreshBoard() {
         boardPosts =
             BoardPostStore.loadPosts()
