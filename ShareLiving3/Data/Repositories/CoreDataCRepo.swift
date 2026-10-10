@@ -142,6 +142,12 @@ final class CoreDataChoreRepository: ChoreRepo {
 
         entity.id = housemate.id
         entity.name = housemate.name
+
+        entity.avatarName = ""
+        entity.email = ""
+        entity.createdAt = Date()
+        entity.isitCurrent = false
+
         return entity
     }
 

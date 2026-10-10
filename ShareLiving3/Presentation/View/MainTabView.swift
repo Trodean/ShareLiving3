@@ -15,12 +15,30 @@ struct MainTabView: View {
     @ObservedObject var choreViewModel: ChoreViewModel
 
     let housemates = [
-        Housemate(id: UUID(), name: "Yang"),
-        Housemate(id: UUID(), name: "Jason"),
-        Housemate(id: UUID(), name: "Phoebe"),
-        Housemate(id: UUID(), name: "Crystal"),
-        Housemate(id: UUID(), name: "Damian"),
-        Housemate(id: UUID(), name: "Luna")
+        Housemate(
+            id: UUID(uuidString: "11111111-1111-1111-1111-111111111111")!,
+            name: "Yang"
+        ),
+        Housemate(
+            id: UUID(uuidString: "22222222-2222-2222-2222-222222222222")!,
+            name: "Jason"
+        ),
+        Housemate(
+            id: UUID(uuidString: "33333333-3333-3333-3333-333333333333")!,
+            name: "Phoebe"
+        ),
+        Housemate(
+            id: UUID(uuidString: "44444444-4444-4444-4444-444444444444")!,
+            name: "Crystal"
+        ),
+        Housemate(
+            id: UUID(uuidString: "55555555-5555-5555-5555-555555555555")!,
+            name: "Damian"
+        ),
+        Housemate(
+            id: UUID(uuidString: "66666666-6666-6666-6666-666666666666")!,
+            name: "Luna"
+        )
     ]
     
     @State private var showHomePage = true
