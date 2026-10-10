@@ -102,7 +102,6 @@ Users can view, resolve, reopen, and delete posts.
 
 The Household Board is an app-local feature. App Group storage is used to pass board-post data between the Share Extension and the main ShareLiving app.
 
----
 
 ## Core Data Persistence
 
@@ -121,7 +120,6 @@ Relationships connect households, members, expenses, shares, payers, chores, and
 
 Expenses and chores persist between app launches.
 
----
 
 ## Architecture
 
@@ -173,7 +171,6 @@ Repository protocols separate the domain layer from Core Data.
 
 Production repositories use Core Data, while unit tests use in-memory repository implementations. This keeps business logic testable without requiring the production database.
 
----
 
 ## Business Rules
 
@@ -188,7 +185,6 @@ Assignment 3 includes domain-level rules such as:
 
 Typed errors are used to represent these failures.
 
----
 
 ## Monthly Repayment Plan
 
@@ -268,7 +264,6 @@ The main app writes shared values for:
 
 When relevant data changes, the application requests WidgetKit to reload its timelines.
 
----
 
 ## Share Extension
 
@@ -288,7 +283,6 @@ Before posting, the user can:
 
 The extension saves the post to the shared App Group container, and the main app reads the same data into the Household Board.
 
----
 
 ## App Group
 
@@ -301,7 +295,6 @@ The App Group is used for:
 
 Core Data remains the primary persistence layer for the main application.
 
----
 
 ## Testing
 
@@ -321,7 +314,6 @@ Test coverage includes:
 - Repayment plan calculation
 - Balanced repayment scenarios
 
----
 
 ## How to Run
 
@@ -331,7 +323,6 @@ Test coverage includes:
 4. Choose an iPhone Simulator.
 5. Run the project.
 
----
 
 ## How to Test the Widgets
 
@@ -347,7 +338,6 @@ Test coverage includes:
 
 The widget should update when the corresponding app data changes.
 
----
 
 ## How to Test the Share Extension
 
@@ -364,7 +354,6 @@ The widget should update when the corresponding app data changes.
 
 The shared content should appear as a Household Board post.
 
----
 
 ## Assignment 3 Improvements
 
